@@ -55,4 +55,42 @@ router.post('/signup', async (req, res) => {
     }
 })
 
+// login route
+router.post('/login', async (req, res) => {
+    try {
+        const { email, password } = req.body
+        // check for user with that email
+        const requestedUser = await db.user.findOne({
+            where: {
+                email: email
+            }
+        })
+        if (!requestedUser) {
+            res.status(400).json({ msg: 'User not found'})
+        } else {
+            // login user
+            const isMatch = await bcrypt.compare(password, requestedUser.password)
+            if (isMatch) {
+                // token payload
+                const payload = {
+                    id: requestedUser.id,
+                    email: requestedUser.email,
+                    name: requestedUser.name
+                }
+                // token signature
+                jwt.sign(payload, JWT_SECRET, {expiresIn: '1h'}, (error, token) => {
+                    res.json({
+                        success: true,
+                        token: `Bearer token: ${token}`
+                    })
+                })
+            } else {
+                return res.status(400).json({msg: 'Password is incorrect'})
+            }
+        }
+    } catch (error) {
+        console.log(`LOGIN ERROR: ${error}`);
+    }
+})
+
 module.exports = router
