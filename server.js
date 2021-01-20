@@ -1,12 +1,14 @@
 // imports
 const express = require('express')
 const app = express()
+const cors = require('cors')
 const passport = require('passport')
 
 // configure passport
 require('./config/ppconfig')(passport)
 
 // express middleware
+app.use(cors())
 app.use(express.urlencoded({extended: false}))
 app.use(express.json())
 app.use(passport.initialize())
