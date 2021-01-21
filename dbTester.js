@@ -13,4 +13,15 @@ const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJ0ZXN0
 //     console.log(res);
 // })
 
-console.log(jwt_decode(token));
+// async function update() {
+//     const updatedUser = await db.user.update({
+//         email: "new@new1.com"
+//     }, {
+//         where: {
+//             id: 5
+//         }
+//     })
+//     console.log(updatedUser);
+// }
+
+// update()

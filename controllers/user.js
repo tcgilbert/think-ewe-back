@@ -13,6 +13,26 @@ const db = require('../models')
 // router 
 const router = express.Router()
 
+
+// get by ID
+router.get('/:id', async (req, res) => {
+    console.log(req.params);
+    try {        
+        const requestedUser = await db.user.findOne({
+            where: {
+                id: req.params.id
+            }
+        })
+        if (requestedUser) {
+            return res.status(200).json({requestedUser})
+        } else {
+            return res.status(404).json({msg: 'Could not find requested user'})
+        }
+    } catch (error) {
+        console.log(`GET ERROR: ${error}`);
+    }
+})
+
 // sign up route
 router.post('/signup', async (req, res) => {
     console.log('hit the signup route');
@@ -79,7 +99,10 @@ router.post('/login', async (req, res) => {
                     id: requestedUser.id,
                     email: requestedUser.email,
                     name: requestedUser.name,
-                    registered: requestedUser.registered
+                    registered: requestedUser.registered, 
+                    username: requestedUser.username, 
+                    bio: requestedUser.bio,
+                    avater: requestedUser.avatar
                 }
                 // token signature
                 jwt.sign(payload, JWT_SECRET, {expiresIn: '1h'}, (error, token) => {
@@ -94,6 +117,27 @@ router.post('/login', async (req, res) => {
         }
     } catch (error) {
         return res.status(400).json({msg: 'Email or password incorrect'})
+    }
+})
+
+// update from dashboard
+router.put('/dashboard-update', async (req, res) => {
+    const { username, bio, id } = req.body
+    console.log("hit the update route!!!!!!!!!1");
+    console.log(req.body);
+    try {  
+        const updatedUser = await db.user.update({
+            username: username,
+            bio: bio,
+            registered: true
+        }, {
+            where: {
+                id: id
+            }
+        })
+        return res.status(204).json(updatedUser)
+    } catch (error) {
+        return res.status(400).json({msg: 'Failed to update user', error: error})
     }
 })
 
