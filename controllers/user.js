@@ -13,14 +13,10 @@ const db = require('../models')
 // router 
 const router = express.Router()
 
-// test route
-router.get('/test', (req, res) => {
-    res.json({msg: 'you have hit the users route'})
-})
-
 // sign up route
 router.post('/signup', async (req, res) => {
     console.log('hit the signup route');
+    console.log(req.body);
     try {
         const requestedUser = await db.user.findOne({
             where: { email: req.body.email }
@@ -60,13 +56,18 @@ router.post('/signup', async (req, res) => {
 // login route
 router.post('/login', async (req, res) => {
     try {
-        const { email, password } = req.body
+        const { identifier, password } = req.body
         // check for user with that email
-        const requestedUser = await db.user.findOne({
+        let requestedUser = await db.user.findOne({
             where: {
-                email: email
+                email: identifier
             }
         })
+        if (!requestedUser) {
+            requestedUser = await db.user.findOne({
+                where: { username: identifier }
+            })
+        }
         if (!requestedUser) {
             res.status(400).json({ msg: 'User not found'})
         } else {
