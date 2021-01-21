@@ -33,7 +33,8 @@ router.post('/signup', async (req, res) => {
             const newUser = await db.user.build({
                 name: req.body.name,
                 email: req.body.email,
-                password: req.body.password
+                password: req.body.password,
+                registered: false
             })
             // create salt for password
             bcrypt.genSalt(10, (error, salt) => {
@@ -76,7 +77,8 @@ router.post('/login', async (req, res) => {
                 const payload = {
                     id: requestedUser.id,
                     email: requestedUser.email,
-                    name: requestedUser.name
+                    name: requestedUser.name,
+                    registered: requestedUser.registered
                 }
                 // token signature
                 jwt.sign(payload, JWT_SECRET, {expiresIn: '1h'}, (error, token) => {
