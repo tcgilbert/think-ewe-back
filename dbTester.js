@@ -1,5 +1,6 @@
+const jwt_decode = require('jwt-decode')
 const db = require('./models')
-
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJ0ZXN0MkB0ZXN0LmNvbSIsIm5hbWUiOiJCb2JieSBCcm93biIsImlhdCI6MTYxMTI0MjM4MiwiZXhwIjoxNjExMjQ1OTgyfQ.sDvHJrx1Kx-yMmAfP5cp8mbgS_DEilQnacVSrYpag9U"
 // db.user.create({
 //     email: "blah@aol.com",
 //     name: "Thomas"
@@ -11,3 +12,5 @@ const db = require('./models')
 // .then((res) => {
 //     console.log(res);
 // })
+
+console.log(jwt_decode(token));

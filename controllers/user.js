@@ -3,6 +3,7 @@ require('dotenv').config()
 const express = require('express')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const jwt_decode = require('jwt-decode')
 const passport = require('passport')
 const JWT_SECRET = process.env.JWT_SECRET
 
@@ -81,7 +82,7 @@ router.post('/login', async (req, res) => {
                 jwt.sign(payload, JWT_SECRET, {expiresIn: '1h'}, (error, token) => {
                     res.json({
                         success: true,
-                        token: `Bearer token: ${token}`
+                        token
                     })
                 })
             } else {
@@ -90,6 +91,27 @@ router.post('/login', async (req, res) => {
         }
     } catch (error) {
         return res.status(400).json({msg: 'Email or password incorrect'})
+    }
+})
+
+
+router.post('/check-token', async (req, res) => {
+    console.log('hit token checkpoint');
+    const { token } = req.body
+    const payload = await jwt_decode(token)
+    try {        
+        const requestedUser =  await db.user.findOne({
+            where: {
+                email: payload.email
+            }
+        })
+        if (requestedUser) {
+            res.status(200).json({user_found: true})
+        } else {
+            res.status(401).json({msg: "No user associated with that token"})
+        }
+    } catch (error) {
+        console.log(`TOKEN CHECKPOINT ERROR: ${error}`);
     }
 })
 
