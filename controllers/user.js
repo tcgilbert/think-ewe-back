@@ -28,7 +28,7 @@ router.post('/check-token', async (req, res) => {
         if (requestedUser) {
             res.status(200).json({user_found: requestedUser})
         } else {
-            res.status(401).json({msg: "No user associated with that token"})
+            res.status(401).json({user_found: false})
         }
     } catch (error) {
         console.log(`TOKEN CHECKPOINT ERROR: ${error}`);
