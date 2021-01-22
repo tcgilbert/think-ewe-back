@@ -13,6 +13,27 @@ const db = require('../models')
 // router 
 const router = express.Router()
 
+// token checkpoint
+router.post('/check-token', async (req, res) => {
+    console.log('hit token checkpoint');
+    const { token } = req.body
+    const payload = await jwt_decode(token)
+    console.log(payload);
+    try {        
+        const requestedUser =  await db.user.findOne({
+            where: {
+                email: payload.email
+            }
+        })
+        if (requestedUser) {
+            res.status(200).json({user_found: requestedUser})
+        } else {
+            res.status(401).json({msg: "No user associated with that token"})
+        }
+    } catch (error) {
+        console.log(`TOKEN CHECKPOINT ERROR: ${error}`);
+    }
+})
 
 // get by ID
 router.get('/:id', async (req, res) => {
@@ -98,11 +119,6 @@ router.post('/login', async (req, res) => {
                 const payload = {
                     id: requestedUser.id,
                     email: requestedUser.email,
-                    name: requestedUser.name,
-                    registered: requestedUser.registered, 
-                    username: requestedUser.username, 
-                    bio: requestedUser.bio,
-                    avater: requestedUser.avatar
                 }
                 // token signature
                 jwt.sign(payload, JWT_SECRET, {expiresIn: '1h'}, (error, token) => {
@@ -142,24 +158,6 @@ router.put('/dashboard-update', async (req, res) => {
 })
 
 
-router.post('/check-token', async (req, res) => {
-    console.log('hit token checkpoint');
-    const { token } = req.body
-    const payload = await jwt_decode(token)
-    try {        
-        const requestedUser =  await db.user.findOne({
-            where: {
-                email: payload.email
-            }
-        })
-        if (requestedUser) {
-            res.status(200).json({user_found: true})
-        } else {
-            res.status(401).json({msg: "No user associated with that token"})
-        }
-    } catch (error) {
-        console.log(`TOKEN CHECKPOINT ERROR: ${error}`);
-    }
-})
+
 
 module.exports = router
