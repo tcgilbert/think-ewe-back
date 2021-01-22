@@ -138,13 +138,14 @@ router.post('/login', async (req, res) => {
 
 // update from dashboard
 router.put('/dashboard-update', async (req, res) => {
-    const { username, bio, id } = req.body
+    const { username, bio, id, avatar } = req.body
     console.log("hit the update route!!!!!!!!!1");
     console.log(req.body);
     try {  
         const updatedUser = await db.user.update({
             username: username,
             bio: bio,
+            avatar: avatar,
             registered: true
         }, {
             where: {
