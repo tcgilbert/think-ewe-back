@@ -15,12 +15,11 @@ module.exports = (sequelize, DataTypes) => {
   };
   book_post.init({
     user_id: DataTypes.INTEGER,
-    author: DataTypes.STRING,
+    authors: DataTypes.ARRAY,
     title: DataTypes.STRING,
     cover_url: DataTypes.STRING,
     rating: DataTypes.INTEGER,
     blurb: DataTypes.STRING,
-    api_endpoint: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'book_post',
