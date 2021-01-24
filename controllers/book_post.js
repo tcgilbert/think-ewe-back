@@ -40,5 +40,19 @@ router.post('/create', async (req, res) => {
     }
 })
 
+// update book post
+router.put('/update', async (req, res) => {
+    const { rating, blurb, post_id } = req.body.post
+    try {
+        const bookToUpdate = await db.book_post.findOne({where: {id: post_id}})
+        bookToUpdate.rating = rating
+        bookToUpdate.blurb = blurb
+        await bookToUpdate.save()
+        res.status(204).json({bookToUpdate})
+    } catch (error) {
+        console.log(`UPDATING POST ERROR: ${error}`);
+    }
+})
+
 
 module.exports = router
