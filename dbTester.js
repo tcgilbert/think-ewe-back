@@ -24,4 +24,17 @@ const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJ0ZXN0
 //     console.log(updatedUser);
 // }
 
+// const book_post1 = {
+//     title: "BOoky Book",
+//     authors: ['steve', 'bob'],
+//     rating: 2,
+//     blurb: "good boook man",
+//     user_id: 50,
+//     cover_url: "image1"
+// }
+
+
+// db.book_post.create(book_post1)
+
+
 // update()
