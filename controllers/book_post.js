@@ -9,6 +9,21 @@ const db = require('../models')
 // router 
 const router = express.Router()
 
+// get all book posts
+router.get('/:id', async (req, res) => {
+    try {
+        let posts =  await db.book_post.findAll({
+            where: {
+                user_id: req.params.id
+            }
+        })
+        res.status(200).json({posts})
+    } catch (error) {
+        console.log(`ERROR GETTING BOOK POSTS: ${error}`);
+    }
+})
+
+
 // create a new book post
 router.post('/create', async (req, res) => {
     console.log(req.body);
