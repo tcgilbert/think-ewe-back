@@ -14,8 +14,11 @@ router.get('/:id', async (req, res) => {
     try {
         let posts =  await db.book_post.findAll({
             where: {
-                user_id: req.params.id
-            }
+                user_id: req.params.id,
+            },
+            order: [
+                ['createdAt', 'DESC']
+            ]
         })
         res.status(200).json({posts})
     } catch (error) {
