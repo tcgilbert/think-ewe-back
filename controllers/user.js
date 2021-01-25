@@ -109,7 +109,7 @@ router.get('/other-user/:username', async (req, res) => {
         } else {
             return res
                 .status(404)
-                .json({ msg: "Could not find requested user" });
+                .json({ msg: "Could not find requested user", requestedUser: false });
         }
     } catch (error) {
         console.log(`GET ERROR: ${error}`);
