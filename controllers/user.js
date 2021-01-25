@@ -38,7 +38,7 @@ router.post("/check-token", async (req, res) => {
 });
 
 // get by ID
-router.get("current/:id", async (req, res) => {
+router.get("/current/:id", async (req, res) => {
     console.log(req.params);
     try {
         const requestedUser = await db.user.findOne({
@@ -137,6 +137,7 @@ router.post("/signup", async (req, res) => {
 
 // login route
 router.post("/login", async (req, res) => {
+    console.log("hit the login route");
     try {
         const { identifier, password } = req.body;
         // check for user with that email
