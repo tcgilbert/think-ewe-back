@@ -24,10 +24,25 @@ router.post('/follow/create', async (req, res) => {
     }
 })
 
-// get all followers
-router.get('followers/:user_id', async (req, res) => {
+// delete following
+router.post('/follow/delete', async (req, res) => {
+    console.log(req.body);
+    const { follower_id, following_id } = req.body
     try {
-        let followers = await db.followings.findAll({ where: {
+        let dbRes = await db.following.destroy({ where: {
+            follower_id: follower_id,
+            following_id: following_id
+        }})
+        res.status(200).json({dbRes})
+    } catch (error) {
+       console.log(`DELETE FOLLOW ERROR: ${error}`); 
+    }
+})
+
+// get all followers
+router.get('/followers/:user_id', async (req, res) => {
+    try {
+        let followers = await db.following.findAll({ where: {
             following_id: req.params.user_id
         }})
         res.status(200).json({followers})
@@ -37,12 +52,12 @@ router.get('followers/:user_id', async (req, res) => {
 })
 
 // get all followings
-router.get('followers/:user_id', async (req, res) => {
+router.get('/following/:user_id', async (req, res) => {
     try {
-        let followings = await db.followings.findAll({ where: {
+        let following = await db.following.findAll({ where: {
             follower_id: req.params.user_id
         }})
-        res.status(200).json({followings})
+        res.status(200).json({following})
     } catch (error) {
         console.log(`GET FOLLOWERS ERROR: ${error}`); 
     }
