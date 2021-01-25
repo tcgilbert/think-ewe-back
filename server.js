@@ -21,6 +21,7 @@ app.get('/', (req, res) => {
 // endpoints
 app.use('/users', require('./controllers/user'))
 app.use('/book-post', require('./controllers/book_post'))
+app.use('/social', require('./controllers/followings'))
 
 
 // create port
