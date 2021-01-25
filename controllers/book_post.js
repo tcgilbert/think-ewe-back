@@ -2,6 +2,8 @@
 require("dotenv").config();
 const express = require("express");
 const passport = require("passport");
+const Sequelize = require("sequelize");
+const Op = Sequelize.Op;
 
 // database
 const db = require("../models");
@@ -10,7 +12,7 @@ const db = require("../models");
 const router = express.Router();
 
 // get all book posts
-router.get("/:id", async (req, res) => {
+router.get("/user/:id", async (req, res) => {
     try {
         let posts = await db.book_post.findAll({
             where: {
@@ -23,6 +25,28 @@ router.get("/:id", async (req, res) => {
         console.log(`ERROR GETTING BOOK POSTS: ${error}`);
     }
 });
+
+router.post("/feed", async (req, res) => {
+    let queryArray = []
+    req.body.accountIds.forEach((reqId) => {
+        let queryObj =  {user_id: reqId}
+        queryArray.push(queryObj)
+    })
+    console.log(queryArray);
+    try {
+        let posts = await db.book_post.findAll({
+            where: {
+                [Op.or]: queryArray
+            },
+            order: [["createdAt", "DESC"]],
+        });
+        res.status(200).json({ posts });
+    } catch (error) {
+        console.log(`ERROR GETTING BOOK POSTS: ${error}`);
+    }
+});
+
+
 
 // create a new book post
 router.post("/create", async (req, res) => {
