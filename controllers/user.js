@@ -95,6 +95,27 @@ router.get("/find/:user", async (req, res) => {
     }
 });
 
+
+// get by username when viewing other user profile
+router.get('/other-user/:username', async (req, res) => {
+    try {
+        const requestedUser = await db.user.findOne({
+            where: {
+                username: req.params.username,
+            },
+        });
+        if (requestedUser) {
+            return res.status(200).json({ requestedUser });
+        } else {
+            return res
+                .status(404)
+                .json({ msg: "Could not find requested user" });
+        }
+    } catch (error) {
+        console.log(`GET ERROR: ${error}`);
+    }
+})
+
 // sign up route
 router.post("/signup", async (req, res) => {
     console.log("hit the signup route");
