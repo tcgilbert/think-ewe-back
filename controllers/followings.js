@@ -26,7 +26,6 @@ router.post('/follow/create', async (req, res) => {
 
 // delete following
 router.post('/follow/delete', async (req, res) => {
-    console.log(req.body);
     const { follower_id, following_id } = req.body
     try {
         let dbRes = await db.following.destroy({ where: {
@@ -42,10 +41,21 @@ router.post('/follow/delete', async (req, res) => {
 // get all followers
 router.get('/followers/:user_id', async (req, res) => {
     try {
-        let followers = await db.following.findAll({ where: {
+        let followerInstances = await db.following.findAll({ where: {
             following_id: req.params.user_id
         }})
-        res.status(200).json({followers})
+        let followers = await Promise.all(
+            followerInstances.map( async (instance) => {
+                let followerData = await db.user.findOne({where: {id: instance.follower_id}})
+                let followerObj = {
+                    id: instance.follower_id,
+                    username: followerData.username,
+                    name: followerData.name
+                }
+                return followerObj
+            })
+        )
+        res.status(200).json({followers})    
     } catch (error) {
         console.log(`GET FOLLOWERS ERROR: ${error}`); 
     }
@@ -54,9 +64,20 @@ router.get('/followers/:user_id', async (req, res) => {
 // get all followings
 router.get('/following/:user_id', async (req, res) => {
     try {
-        let following = await db.following.findAll({ where: {
+        let followingInstances = await db.following.findAll({ where: {
             follower_id: req.params.user_id
         }})
+        let following = await Promise.all(
+            followingInstances.map( async (instance) => {
+                let followingData = await db.user.findOne({where: {id: instance.following_id}})
+                let followingObj = {
+                    id: instance.following_id,
+                    username: followingData.username,
+                    name: followingData.name
+                }
+                return followingObj
+            })
+        )
         res.status(200).json({following})
     } catch (error) {
         console.log(`GET FOLLOWERS ERROR: ${error}`); 
