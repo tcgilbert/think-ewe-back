@@ -50,7 +50,8 @@ router.get('/followers/:user_id', async (req, res) => {
                 let followerObj = {
                     id: instance.follower_id,
                     username: followerData.username,
-                    name: followerData.name
+                    name: followerData.name,
+                    avatar: followerData.avatar
                 }
                 return followerObj
             })
@@ -73,7 +74,8 @@ router.get('/following/:user_id', async (req, res) => {
                 let followingObj = {
                     id: instance.following_id,
                     username: followingData.username,
-                    name: followingData.name
+                    name: followingData.name,
+                    avatar: followingData.avatar
                 }
                 return followingObj
             })
