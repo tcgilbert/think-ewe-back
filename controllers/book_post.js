@@ -84,6 +84,7 @@ router.delete("/delete/:id", async (req, res) => {
     const post_id = req.params.id;
     try {
         await db.book_post.destroy({ where: { id: post_id } });
+        res.status(200).json({msg: "Successfully deleted post"})
     } catch (error) {
         console.log(`DELETE POST ERROR: ${error}`);
     }
